@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Add Patient</h2>
+<form method="POST">
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" name="name" required>
+    </div>
+    <div class="form-group">
+        <label for="date_of_birth">Date of Birth</label>
+        <input type="date" name="date_of_birth" required>
+    </div>
+    <div class="form-group">
+        <label for="medical_history">Medical History</label>
+        <textarea name="medical_history" rows="5" cols="32"></textarea>
+    </div>
+    <button type="submit">Add Patient</button>
+</form>
+{% endblock %}

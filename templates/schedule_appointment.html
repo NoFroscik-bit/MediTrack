@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Schedule Appointment</h2>
+<form method="POST">
+    <div class="form-group">
+        <label for="patient_id">Patient ID</label>
+        <input type="number" name="patient_id" required>
+    </div>
+    <div class="form-group">
+        <label for="date_time">Date and Time (YYYY-MM-DD HH:MM)</label>
+        <input type="text" name="date_time" required>
+    </div>
+    <button type="submit">Schedule Appointment</button>
+</form>
+{% endblock %}

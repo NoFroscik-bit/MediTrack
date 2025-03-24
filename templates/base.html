@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>MediTrack - Healthcare Management</title>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><img src="{{ url_for('static', filename='images/logo.png') }}" alt="MediTrack Logo" class="logo"> MediTrack</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('add_patient_route') }}">Add Patient</a></li>
+                    <li><a href="{{ url_for('schedule_appointment') }}">Schedule Appointment</a></li>
+                    <li><a href="{{ url_for('admin_login') }}">Admin Login</a></li> 
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flashes">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 MediTrack. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

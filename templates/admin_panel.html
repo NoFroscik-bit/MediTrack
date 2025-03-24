@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Admin Panel</h2>
+
+<h3>Employees</h3>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Position</th>
+    </tr>
+    {% for employee in employees %}
+    <tr>
+        <td>{{ employee['id'] }}</td>
+        <td>{{ employee['name'] }}</td>
+        <td>{{ employee['position'] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h3>Appointments</h3>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Action</th>
+    </tr>
+    {% for appointment in appointments %}
+    <tr>
+        <td>{{ appointment['id'] }}</td>
+        <td>{{ appointment['date'] }}</td>
+        <td>{{ appointment['time'] }}</td>
+        <td>
+            <a href="{{ url_for('cancel_appointment_route', appointment_id=appointment['id']) }}">Cancel</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
