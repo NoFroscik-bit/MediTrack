@@ -7,11 +7,11 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row  # This allows us to access columns by name
     return conn
 
-def add_patient(name, date_of_birth, medical_history):
+def add_patient(name, surname, date_of_birth, pesel, medical_history=''):
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO Patient (name, date_of_birth, medical_history) VALUES (?, ?, ?)', 
-                   (name, date_of_birth, medical_history))
+    cursor.execute('INSERT INTO Patient (name, surname, date_of_birth, pesel, medical_history) VALUES (?, ?, ?, ?, ?)',
+                   (name, surname, date_of_birth, pesel, medical_history))
     conn.commit()
     conn.close()
 

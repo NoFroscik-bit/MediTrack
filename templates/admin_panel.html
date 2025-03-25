@@ -3,21 +3,26 @@
 {% block content %}
 <h2>Admin Panel</h2>
 
-<h3>Employees</h3>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Position</th>
-    </tr>
-    {% for employee in employees %}
-    <tr>
-        <td>{{ employee['id'] }}</td>
-        <td>{{ employee['name'] }}</td>
-        <td>{{ employee['position'] }}</td>
-    </tr>
-    {% endfor %}
-</table>
+<h3>Add Patient</h3>
+<form method="POST" action="{{ url_for('add_patient_route') }}">
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" name="name" required>
+    </div>
+    <div class="form-group">
+        <label for="surname">Surname</label>
+        <input type="text" name="surname" required>
+    </div>
+    <div class="form-group">
+        <label for="date_of_birth">Date of Birth</label>
+        <input type="date" name="date_of_birth" required>
+    </div>
+    <div class="form-group">
+        <label for="pesel">PESEL Number</label>
+        <input type="text" name="pesel" required>
+    </div>
+    <button type="submit">Add Patient</button>
+</form>
 
 <h3>Appointments</h3>
 <table>
@@ -38,4 +43,6 @@
     </tr>
     {% endfor %}
 </table>
+
+<a href="{{ url_for('logout') }}">Logout</a>
 {% endblock %}

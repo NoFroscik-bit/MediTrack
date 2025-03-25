@@ -9,7 +9,6 @@ DATABASE = 'meditrack.db'
 ADMIN_DATABASE = 'adminbase.db'
 
 
-# Database initialization for main application
 def init_db():
     with sqlite3.connect(DATABASE) as conn:
         cursor = conn.cursor()
@@ -17,7 +16,9 @@ def init_db():
             CREATE TABLE IF NOT EXISTS Patient (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
+                surname TEXT NOT NULL, 
                 date_of_birth TEXT NOT NULL,
+                pesel TEXT NOT NULL,    
                 medical_history TEXT
             )
         ''')
@@ -39,7 +40,6 @@ def init_db():
         conn.commit()
 
 
-# Database initialization for admin login
 def init_admin_db():
     with sqlite3.connect(ADMIN_DATABASE) as conn:
         cursor = conn.cursor()
@@ -50,7 +50,6 @@ def init_admin_db():
                 password TEXT NOT NULL
             )
         ''')
-        # Insert a test admin user if the table is empty
         cursor.execute('SELECT COUNT(*) FROM Admin')
         if cursor.fetchone()[0] == 0:
             cursor.execute('INSERT INTO Admin (username, password) VALUES (?, ?)', ('Test', 'Test'))
@@ -63,7 +62,6 @@ def create_tables():
     init_admin_db()
 
 
-# Database helper functions
 def get_db_connection():
     conn = sqlite3.connect(DATABASE)
     conn.row_factory = sqlite3.Row
@@ -126,16 +124,30 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/add_patient', methods=['GET', 'POST'])
+@app.route('/add_patient', methods=['POST'])
 def add_patient_route():
+    if 'admin_id' in session:
+        if request.method == 'POST':
+            name = request.form['name']
+            surname = request.form['surname']
+            date_of_birth = request.form['date_of_birth']
+            pesel = request.form['pesel']
+            add_patient(name, surname, date_of_birth, pesel)
+            flash('Patient added successfully !', 'success')
+            return redirect(url_for('admin_panel'))
+            flash('You do not have permission to access this page.', 'danger')
+            return redirect(url_for('index'))
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
     if request.method == 'POST':
         name = request.form['name']
+        surname = request.form['surname']
         date_of_birth = request.form['date_of_birth']
-        medical_history = request.form.get('medical_history', '')
-        add_patient(name, date_of_birth, medical_history)
-        flash('Patient added successfully!', 'success')
+        pesel = request.form['pesel']
+        flash('Registration successful!', 'success')
         return redirect(url_for('index'))
-    return render_template('add_patient.html')
+    return render_template('register.html')
 
 
 @app.route('/schedule_appointment', methods=['GET', 'POST'])
@@ -157,13 +169,20 @@ def admin_login():
 
         admin = validate_admin(username, password)
         if admin:
-            session['admin_id'] = admin[0]
+            session['admin_id'] = admin['id']
             flash('Admin login successful!', 'success')
             return redirect(url_for('admin_panel'))
         else:
             flash('Invalid username or password', 'danger')
 
     return render_template('admin_login.html')
+
+
+@app.route('/logout')
+def logout():
+    session.pop('admin_id', None)
+    flash('You have been logged out.', 'success')
+    return redirect(url_for('index'))
 
 
 @app.route('/admin_panel')
@@ -177,6 +196,7 @@ def admin_panel():
         return redirect(url_for('index'))
 
 
+
 @app.route('/cancel_appointment/<int:appointment_id>')
 def cancel_appointment_route(appointment_id):
     if 'admin_id' in session:
@@ -186,7 +206,6 @@ def cancel_appointment_route(appointment_id):
     else:
         flash('You do not have permission to access this page.', 'danger')
         return redirect(url_for('index'))
-
 
 if __name__ == '__main__':
     app.run(debug=True)
