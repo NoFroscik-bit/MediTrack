@@ -56,7 +56,6 @@ def init_admin_db():
         conn.commit()
 
 
-@app.before_first_request
 def create_tables():
     init_db()
     init_admin_db()
